@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct node{
+	char firstname[20];
+	char lastname[20];
+	struct node* next;
+};
+
+void printlist(struct node* head);
+
+int main(){
+	
+	struct node n1, n2, n3;
+	
+	strcpy(n1.firstname, "Alice");
+	strcpy(n2.firstname, "Bob");
+	strcpy(n3.firstname, "Clara");
+	
+	strcpy(n1.lastname, "Johnson");
+	strcpy(n2.lastname, "Lee");
+	strcpy(n3.lastname, "Zhang");
+	
+	n1.next = &n2;
+	n2.next = &n3;
+	n3.next = NULL;
+	
+	struct node* head = &n1;
+	
+	printlist(head);
+	
+	return 0;
+}
+
+void printlist(struct node* head){
+	struct node* current = head;
+	while (current != NULL){
+		printf("Name: %s %s \n", current -> firstname, current -> lastname);
+		current = current -> next;
+	}
+	printf("End of list \n");
+}
