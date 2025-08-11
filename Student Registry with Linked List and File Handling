@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct students {
+    char ID[10];
+    char name[50];
+    int age;
+    struct students* next;
+};
+
+void printlist(struct students* head);
+
+int main() {
+    printf("Welcome to this Student Registry List\n");
+
+    int numberofstudents;
+    printf("Please enter the number of students to register: ");
+    scanf("%d", &numberofstudents);
+    getchar(); // clear newline from buffer
+
+    struct students* head = NULL;
+    struct students* temp = NULL;
+    struct students* last = NULL;
+
+    // Open file for writing
+    FILE *fp = fopen("students.txt", "w");
+    if (fp == NULL) {
+        printf("Error opening file for writing.\n");
+        return 1;
+    }
+
+    for (int i = 0; i < numberofstudents; i++) {
+        temp = (struct students*) malloc(sizeof(struct students));
+
+        printf("What is the student ID of student %d: ", i+1);
+        fgets(temp->ID, sizeof(temp->ID), stdin);
+        temp->ID[strcspn(temp->ID, "\n")] = '\0'; // remove newline
+
+        printf("What is the name of the student %d: ", i+1);
+        fgets(temp->name, sizeof(temp->name), stdin);
+        temp->name[strcspn(temp->name, "\n")] = '\0';
+
+        printf("What is the age of student %d: ", i+1);
+        scanf("%d", &temp->age);
+        getchar(); // clear newline
+
+        temp->next = NULL;
+
+        // Append to linked list
+        if (head == NULL) {
+            head = temp;
+        } else {
+            last->next = temp;
+        }
+        last = temp;
+
+        // Write student data to file
+        fprintf(fp, "%s,%s,%d\n", temp->ID, temp->name, temp->age);
+    }
+
+    fclose(fp); // Close file
+
+    printlist(head);
+
+    return 0;
+}
+
+void printlist(struct students* head) {
+    struct students* current = head;
+
+    printf("\nSTUDENT ID\tFULL NAME\tAGE\n");
+    while (current != NULL) {
+        printf("%s\t%s\t%d\n", current->ID, current->name, current->age);
+        current = current->next;
+    }
+}
